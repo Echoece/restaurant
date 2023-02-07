@@ -1,14 +1,11 @@
 package com.echo.restaurant.service.order;
 
-import com.echo.restaurant.entity.auth.ApplicationUserRole;
 import com.echo.restaurant.entity.order.Order;
+import com.echo.restaurant.enums.OrderStatus;
 import com.echo.restaurant.exception.ApiNotAcceptableException;
 import com.echo.restaurant.repository.order.OrderRepository;
 import com.echo.restaurant.utility.Utility;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.bridge.Message;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,8 +37,8 @@ public class OrderService {
         return orderRepository.save(savedItem);
     }
 
-    public Page<Order> findAll(Pageable pageable){
-        return orderRepository.findAll(pageable);
+    public List<Order> findAll(){
+        return orderRepository.findAll();
     }
     public Order findById(Long id) throws ApiNotAcceptableException {
         return orderRepository.findById(id).orElseThrow(()-> new ApiNotAcceptableException("Order was not found with id: " + id));
@@ -52,5 +49,7 @@ public class OrderService {
         orderRepository.delete(savedItem);
     }
 
-
+    public List<Order> filterOrderByOrderStatus(OrderStatus orderStatus){
+        return orderRepository.findAllByStatus(orderStatus);
+    }
 }
