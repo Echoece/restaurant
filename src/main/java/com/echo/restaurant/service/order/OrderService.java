@@ -1,0 +1,56 @@
+package com.echo.restaurant.service.order;
+
+import com.echo.restaurant.entity.auth.ApplicationUserRole;
+import com.echo.restaurant.entity.order.Order;
+import com.echo.restaurant.exception.ApiNotAcceptableException;
+import com.echo.restaurant.repository.order.OrderRepository;
+import com.echo.restaurant.utility.Utility;
+import lombok.RequiredArgsConstructor;
+import org.aspectj.bridge.Message;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class OrderService {
+    private final OrderRepository orderRepository;
+
+    public Order save(Order item) throws ApiNotAcceptableException {
+        if(item.getId()!=null)
+            throw new ApiNotAcceptableException("id field must be null for save operation");
+        return orderRepository.save(item);
+    }
+
+    public List<Order> saveAll(List<Order> itemList){
+        itemList = itemList.stream().filter(element -> element.getId()==null).collect(Collectors.toList());
+        return orderRepository.saveAll(itemList);
+    }
+
+    public Order update(Order item) throws ApiNotAcceptableException {
+        if(item.getId() == null)
+            throw new ApiNotAcceptableException("id must not be null for update operation");
+
+        Order savedItem = findById(item.getId());
+        Utility.copyNonNullProperties(item, savedItem);
+
+        return orderRepository.save(savedItem);
+    }
+
+    public Page<Order> findAll(Pageable pageable){
+        return orderRepository.findAll(pageable);
+    }
+    public Order findById(Long id) throws ApiNotAcceptableException {
+        return orderRepository.findById(id).orElseThrow(()-> new ApiNotAcceptableException("Order was not found with id: " + id));
+    }
+
+    public void delete(Long id) throws ApiNotAcceptableException {
+        Order savedItem = findById(id);
+        orderRepository.delete(savedItem);
+    }
+
+
+}
