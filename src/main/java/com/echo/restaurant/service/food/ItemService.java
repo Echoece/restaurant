@@ -20,6 +20,7 @@ public class ItemService {
     public Item save(Item item) throws ApiNotAcceptableException {
         if(item.getId()!=null)
             throw new ApiNotAcceptableException("id field must be null to save item entity");
+        item.getItemProperty().forEach(element -> element.setItem(item));
         return itemRepository.save(item);
     }
 
