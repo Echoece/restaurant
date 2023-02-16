@@ -1,9 +1,7 @@
 package com.echo.restaurant.controller.food;
 
 import com.echo.restaurant.entity.food.Item;
-import com.echo.restaurant.entity.food.ItemProperty;
 import com.echo.restaurant.exception.ApiNotAcceptableException;
-import com.echo.restaurant.service.food.ItemPropertyService;
 import com.echo.restaurant.service.food.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;

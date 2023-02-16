@@ -91,4 +91,8 @@ public class ApplicationUser {
     public Set<String> getPrefixedRoleNames(){
         return roles.stream().map(element -> "ROLE_" + element.getName()).collect(Collectors.toSet());
     }
+
+    public String getAuthentication(){
+        return String.join("",getPrefixedRoleNames());
+    }
 }

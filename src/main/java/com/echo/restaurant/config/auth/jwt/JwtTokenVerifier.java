@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,14 +37,18 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
 
         // if authorization header is null or empty, or it doesnt start with Bearer prefix, the request will be rejected in
         // next filter-chain as we didnt set the authentication here.
-        if( Strings.isNullOrEmpty(authorizationHeader) || !authorizationHeader.startsWith(jwtConfig.getTokenPrefix())){
+        if( Strings.isNullOrEmpty(authorizationHeader)
+                || !authorizationHeader.startsWith(jwtConfig.getTokenPrefix())){
             filterChain.doFilter(request,response);
             return;
         }
 
         // extract the JWT from header
         String token = authorizationHeader.replace(jwtConfig.getTokenPrefix(), "");
-
+        if(Objects.isNull(token)){
+            filterChain.doFilter(request, response);
+            return;
+        }
         try{
             // getting the claims (key value pair) from the token, Jws stands for signed JWT
             Jws<Claims> claimsJws = Jwts.parserBuilder()

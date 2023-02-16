@@ -18,6 +18,7 @@ import javax.crypto.SecretKey;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -79,7 +80,7 @@ public class ApplicationUserService {
 
         String token = Jwts.builder()
                 .setSubject(payload.getEmail())
-                .claim(JwtConfig.AUTHORITIES, payload.getPrefixedRoleNames())
+                .claim(JwtConfig.AUTHORITIES,List.of( Map.of("authority", payload.getAuthentication())) )
                 .setIssuedAt(new Date())
                 .setExpiration(java.sql.Date.valueOf(
                         LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())

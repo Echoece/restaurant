@@ -2,6 +2,7 @@ package com.echo.restaurant.controller.Order;
 
 import com.echo.restaurant.entity.order.Order;
 import com.echo.restaurant.enums.OrderStatus;
+import com.echo.restaurant.enums.PaymentMethod;
 import com.echo.restaurant.exception.ApiNotAcceptableException;
 import com.echo.restaurant.service.order.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -44,6 +46,9 @@ public class OrderController {
 
     @PostMapping
     public Order create(@RequestBody Order payload) throws ApiNotAcceptableException {
+        payload.setOrderTime(LocalDateTime.now());
+        payload.setStatus(OrderStatus.ORDERED);
+        payload.setPaymentMethod(PaymentMethod.CARD);
         return orderService.save(payload);
     }
 
